@@ -2,7 +2,7 @@ import { catchAsyncError } from "../Middleware/catchAsyncError.js";
 import errorHandler from "../Middleware/errorMiddleware.js";
 import { User } from "../models/userSchema.js";
 import { generateToken } from "../utils/generateToken.js";
-import moment from 'moment';
+// import moment from 'moment';
 import cloudinary from 'cloudinary'
 
 export const patientRegister = catchAsyncError(async (req, res, next) => {
@@ -19,9 +19,9 @@ export const patientRegister = catchAsyncError(async (req, res, next) => {
     }
 
     // Convert dob to a Date object
-    const dobDate = moment(dob, 'DD/MM/YYYY').toDate();
+    
 
-    user = await User.create({ firstName, lastName, email, phone, dob: dobDate, gender, password, role });
+    user = await User.create({ firstName, lastName, email, phone, dob, gender, password, role });
 
     generateToken(user, "User registered!", 200, res)
 
@@ -49,7 +49,7 @@ export const login = catchAsyncError(async (req, res, next) => {
     }
 
     if (role !== user.role) {
-        return next(new errorHandler(`${user.role} with this role not found!`, 400))
+        return next(new errorHandler(`User with this role not found!`, 400))
     }
 
     generateToken(user, `${user.role} logged in successfully!`, 200, res)
@@ -67,9 +67,9 @@ export const newAdmin = catchAsyncError(async (req, res, next) => {
         return next(new errorHandler(`${isRegisterd.role} with this Email already exists!`, 400))
     }
 
-    const dobDate = moment(dob, 'DD/MM/YYYY').toDate();
+    
 
-    const admin = await User.create({ firstName, lastName, email, phone, dob: dobDate, gender, password, role: "Admin" })
+    const admin = await User.create({ firstName, lastName, email, phone, dob, gender, password, role: "Admin" })
     res.status(200).json({
         success: true,
         message: "New Admin registered"
@@ -140,9 +140,8 @@ export const addNewDoctor = catchAsyncError(async (req, res, next) => {
         console.error("Cloudinary Error:",cloudinaryResponse.error || "unknown cloudinary error")
     }
 
-    const dobDate = moment(dob, 'DD/MM/YYYY').toDate();
 
-    const doctor = await User.create( { firstName, lastName, email, phone, dob : dobDate, gender, password, doctorDepartment, role : "Doctor",
+    const doctor = await User.create( { firstName, lastName, email, phone, dob , gender, password, doctorDepartment, role : "Doctor",
         docAvatar : {
         public_id : cloudinaryResponse.public_id,
         url : cloudinaryResponse.secure_url

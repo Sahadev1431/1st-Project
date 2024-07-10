@@ -47,7 +47,7 @@ const MessageForm = () => {
         </div>
         <textarea rows={7} placeholder='Message' value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
         <div style={{ justifyContent: "center", alignItems: "center" }}>
-          <button type='submit'>Send</button>
+          <button type='submit'>login</button>
         </div>
       </form>
     </div>
