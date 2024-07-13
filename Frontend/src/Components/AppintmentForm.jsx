@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AppintmentForm = () => {
   const [firstName, setFirstName] = useState();
@@ -13,6 +14,7 @@ const AppintmentForm = () => {
   const [department, setDepartment] = useState();
   const [doctorFirstName, setDoctorFirstName] = useState();
   const [doctorLastName, setDoctorLastName] = useState();
+  const [address, setAdderss] = useState("");
   const [hasVisited, setHasVisited] = useState();
 
   const departmentsArray = [
@@ -27,10 +29,12 @@ const AppintmentForm = () => {
     "ENT",
   ];
 
+  const navigateTo = useNavigate()
+
   const [doctors, setDoctors] = useState([]);
   useEffect(() => {
     const fetchDoctors = async () => {
-      const {data} = await axios.get(
+      const { data } = await axios.get(
         "http://localhost:4000/api/v1/user/doctors",
         {
           withCredentials: true,
@@ -41,8 +45,34 @@ const AppintmentForm = () => {
     fetchDoctors();
   }, []);
 
-  const handleAppointment = (e) => {
+  const handleAppointment = async (e) => {
     e.preventDefault();
+    try {
+      const hasVisitedBool = Boolean(hasVisited)
+      const data = await axios.post("http://localhost:4000/api/v1/appointment/post",{
+        firstName,
+        lastName,
+        email,
+        phone,
+        dob,
+        gender,
+        appointment_date : appointmentDate,
+        department,
+        doctor_firstName : doctorFirstName,
+        doctor_lastName : doctorLastName,
+        address,
+        hasVisited : hasVisitedBool,
+      },{
+        withCredentials : true,
+        headers : {
+          "Content-Type" : "application/json"
+        }
+      })
+      toast.success(data.message)
+      navigateTo("/")
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
   };
   return (
     <>
@@ -124,18 +154,25 @@ const AppintmentForm = () => {
               }}
               disabled={!department}
             >
-                <option value="">Select Doctor</option>
-                {
-                    doctors.filter((doctor) => doctor.doctorDepartment === department).map((doctor, index) => (
-                        <option
-                          value={`${doctor.firstName} ${doctor.lastName}`}
-                          key={index}
-                        >
-                          {doctor.firstName} {doctor.lastName}
-                        </option>
-                      ))}
+              <option value="">Select Doctor</option>
+              {doctors
+                .filter((doctor) => doctor.doctorDepartment === department)
+                .map((doctor, index) => (
+                  <option
+                    value={`${doctor.firstName} ${doctor.lastName}`}
+                    key={index}
+                  >
+                    {doctor.firstName} {doctor.lastName}
+                  </option>
+                ))}
             </select>
           </div>
+          <textarea
+            rows="10"
+            value={address}
+            onChange={(e) => setAdderss(e.target.value)}
+            placeholder="Address"
+          />
           <div
             style={{
               gap: "10px",
@@ -143,16 +180,16 @@ const AppintmentForm = () => {
               flexDirection: "row",
             }}
           >
-            <p style={{ marginBottom: 0 }}>Already Registered?</p>
-            <Link
-              to={"/login"}
-              style={{ textDecoration: "none", alignItems: "center" }}
-            >
-              Login Now
-            </Link>
+            <p style={{ marginBottom: 0 }}>Have You Visited Before?</p>
+            <input
+              type="checkbox"
+              checked={hasVisited}
+              onChange={(e) => setHasVisited(e.target.checked)}
+              style={{flex : "none",width : "25px"}}
+            />
           </div>
           <div style={{ justifyContent: "center", alignItems: "center" }}>
-            <button type="submit">Register</button>
+            <button type="submit">GET APPOINTMENT</button>
           </div>
         </form>
       </div>
