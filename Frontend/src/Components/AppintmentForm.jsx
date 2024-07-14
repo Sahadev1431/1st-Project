@@ -35,7 +35,7 @@ const AppintmentForm = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       const { data } = await axios.get(
-        "http://localhost:4000/api/v1/user/doctors",
+        "https://hospital-management-system-m2jp.onrender.com/api/v1/user/doctors",
         {
           withCredentials: true,
         }
@@ -49,7 +49,7 @@ const AppintmentForm = () => {
     e.preventDefault();
     try {
       const hasVisitedBool = Boolean(hasVisited)
-      const response = await axios.post("http://localhost:4000/api/v1/appointment/post",{
+      const response = await axios.post("https://hospital-management-system-m2jp.onrender.com/v1/appointment/post",{
         firstName,
         lastName,
         email,

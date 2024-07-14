@@ -21,7 +21,7 @@ const Register = () => {
     // const dobDate = moment(dob, 'DD/MM/YYYY').toDate();
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/user/patient/register",
+        "https://hospital-management-system-m2jp.onrender.com/api/v1/user/patient/register",
         { firstName,lastName,email,phone,dob,gender,password, role : "Patient" },
         {
           withCredentials: true,
@@ -115,7 +115,7 @@ const Register = () => {
           </Link>
         </div>
         <div style={{ justifyContent: "center", alignItems: "center" }}>
-          <button type="submit">Register</button>
+          <button type="submit" style={{cursor : "pointer"}}>Register</button>
         </div>
       </form>
     </div>
