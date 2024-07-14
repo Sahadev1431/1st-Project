@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
-import { Context } from "../main";
 import { Navigate, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { Context } from "../main";
+import axios from "axios";
 
 const Login = () => {
-  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,19 +16,23 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/user/login",
-        { email, password, confirmPassword, role: "Admin" },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      toast.success(response.data.message);
-      setIsAuthenticated(true);
-      navigateTo("/");
+      await axios
+        .post(
+          "http://localhost:4000/api/v1/user/login",
+          { email, password, confirmPassword, role: "Admin" },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          toast.success(res.data.message);
+          setIsAuthenticated(true);
+          navigateTo("/");
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+        });
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -38,36 +41,37 @@ const Login = () => {
   if (isAuthenticated) {
     return <Navigate to={"/"} />;
   }
+
   return (
     <>
-      <div className="container form-component">
+      <section className="container form-component">
         <img src="/logo.png" alt="logo" className="logo" />
-        <h1 className="form-title">Welcome to ZeeCare</h1>
-        <p>Only Admins Are Allowed to Access These Resources!</p>
+        <h1 className="form-title">WELCOME TO ZEECARE</h1>
+        <p>Only Admins Are Allowed To Access These Resources!</p>
         <form onSubmit={handleLogin}>
           <input
             type="text"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
           />
           <input
             type="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
           />
           <input
             type="password"
+            placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Comfirm Password"
           />
           <div style={{ justifyContent: "center", alignItems: "center" }}>
-            <button type="submit">Login</button>
+            <button type="submit" style={{cursor:"pointer"}}>Login</button>
           </div>
         </form>
-      </div>
+      </section>
     </>
   );
 };

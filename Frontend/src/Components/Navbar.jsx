@@ -40,11 +40,11 @@ const Navbar = () => {
           <Link to={"/about"}>ABOUT US</Link>
         </div>
         {isAuthenticated ? (
-          <button className="logoutBtn btn" onClick={handleLogout}>
+          <button className="logoutBtn btn" onClick={handleLogout} style={{cursor:"pointer"}}>
             LOGOUT
           </button>
         ) : (
-          <button className="logoutBtn btn" onClick={goToLogin}>
+          <button className="logoutBtn btn" onClick={goToLogin} style={{cursor:"pointer"}}>
             LOGIN
           </button>
         )}

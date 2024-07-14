@@ -2,7 +2,7 @@ import { catchAsyncError } from "../Middleware/catchAsyncError.js";
 import errorHandler from "../Middleware/errorMiddleware.js";
 import { Appointment } from "../models/appointmentSchema.js";
 import { User } from "../models/userSchema.js";
-import moment from "moment";
+// import moment from "moment";
 
 export const postAppointment = catchAsyncError(async (req, res, next) => {
     const { firstName, lastName, email, phone, dob, gender, appointment_date, department, doctor_firstName, doctor_lastName, hasVisited, address } = req.body
@@ -28,7 +28,7 @@ export const postAppointment = catchAsyncError(async (req, res, next) => {
     const doctorId = isConflict[0]._id
     const patientId = req.user._id
 
-    const dobDate = moment(dob, 'DD/MM/YYYY').toDate();
+    // const dobDate = moment(dob, 'DD/MM/YYYY').toDate();
 
     const existingAppointment = await Appointment.findOne({ doctorId, patientId })
 
@@ -36,7 +36,7 @@ export const postAppointment = catchAsyncError(async (req, res, next) => {
         return next(new errorHandler("You already have an appointment with this doctor", 400))
     }
 
-    const appointment = await Appointment.create({ firstName, lastName, email, phone, dob: dobDate, gender, appointment_date, department, doctor: { firstName: doctor_firstName, lastName: doctor_lastName }, hasVisited, address, doctorId, patientId })
+    const appointment = await Appointment.create({ firstName, lastName, email, phone, dob, gender, appointment_date, department, doctor: { firstName: doctor_firstName, lastName: doctor_lastName }, hasVisited, address, doctorId, patientId })
 
     res.status(200).json({
         success: true,

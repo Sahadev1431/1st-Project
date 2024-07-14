@@ -49,7 +49,7 @@ export const login = catchAsyncError(async (req, res, next) => {
     }
 
     if (role !== user.role) {
-        return next(new errorHandler(`User with this role not found!`, 400))
+        return next(new errorHandler(`Only ${role} can login!`, 400))
     }
 
     generateToken(user, `${user.role} logged in successfully!`, 200, res)

@@ -21,7 +21,7 @@ const appointmentSchema = new mongoose.Schema({
         maxLength: [10, "Phone number should contain exactly 10 digits!"]
     },
     dob: {
-        type: Date,
+        type: String,
         required: [true, "Please provide DOB"]
     },
     gender: {

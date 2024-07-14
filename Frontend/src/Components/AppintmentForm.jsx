@@ -49,7 +49,7 @@ const AppintmentForm = () => {
     e.preventDefault();
     try {
       const hasVisitedBool = Boolean(hasVisited)
-      const data = await axios.post("http://localhost:4000/api/v1/appointment/post",{
+      const response = await axios.post("http://localhost:4000/api/v1/appointment/post",{
         firstName,
         lastName,
         email,
@@ -68,7 +68,7 @@ const AppintmentForm = () => {
           "Content-Type" : "application/json"
         }
       })
-      toast.success(data.message)
+      toast.success(response.data.message)
       navigateTo("/")
     } catch (error) {
       toast.error(error.response.data.message)
@@ -189,7 +189,7 @@ const AppintmentForm = () => {
             />
           </div>
           <div style={{ justifyContent: "center", alignItems: "center" }}>
-            <button type="submit">GET APPOINTMENT</button>
+            <button type="submit" style={{cursor:"pointer"}}>GET APPOINTMENT</button>
           </div>
         </form>
       </div>
